@@ -1,18 +1,28 @@
 package optics.marine.usf.edu.xml_v2;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
+import android.view.LayoutInflater;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.content.res.Resources;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -22,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     TextView display;
     private Resources resources;
     private String output;
+    ProgressBar mProgressBar;
+    TextView response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,13 +113,9 @@ public class MainActivity extends AppCompatActivity {
                                         Log.i("roi", roi.ROItitle);
                                         //Log.i("MidArraySize", ((Integer)(response.myMenu.topMenu.get(iTop).midMenu.size())).toString());
                                     }
-                                 break;
+                                    break;
                                 }
-                                //break;
                             }
-                            //iMid++;
-                            //iTop++;
-                            //break;
                         }
                         if (name.equals("description")) {
                             Log.i("description", "inside description");
@@ -118,16 +126,6 @@ public class MainActivity extends AppCompatActivity {
                         if (name.equals("tabs")) {
                             Log.i("tabs", "inside tabs");
                         }
-                        /* else if (name.equals("mid")){
-                            MyMenu.MyRegion region = new MyMenu.MyRegion();
-                            region.regionTitle = parser.getAttributeValue(null, "title");
-                            currentItem.myRegions.add(region);
-                        } else if (name.equals("roi")){
-                            MyMenu.MyRegion.ROI roi = new MyMenu.MyRegion.ROI();
-                            roi.ROIlink = parser.getAttributeValue(null, "link");
-                            roi.ROItitle = parser.nextText();
-
-                        }*/
                     }
                     break;
                 /*case XmlPullParser.END_TAG:
@@ -141,70 +139,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.i("end", "ending of parseXML");
-     //   printProducts(products);
+        //   printProducts(products);
     }
 
-
-    /*private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.i("inMethod", "in parseXML");
-        ArrayList<Product> products = null;
-        int eventType = parser.getEventType();
-        Product currentProduct = null;
-
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            String name = null;
-            switch (eventType) {
-                case XmlPullParser.START_DOCUMENT:
-                    products = new ArrayList();
-                    Log.i("case startdoc", "In the start of XML");
-                    break;
-                case XmlPullParser.START_TAG:
-                    name = parser.getName();
-                    Log.i("name", name);
-                    if (name.equals("product")) {
-                        currentProduct = new Product();
-                    } else if (currentProduct != null) {
-                        if (name.equals("productname")) {
-                            currentProduct.color = parser.getAttributeValue(null, "color");
-                            currentProduct.quantity = parser.getAttributeValue(null, "quantity");
-                            currentProduct.name = parser.nextText();
-                        } else if (name.equals("productcolor")){
-                            currentProduct.color = parser.nextText();
-                        } else if (name.equals("productquantity")){
-                            currentProduct.quantity= parser.nextText();
-                        }
-                    }
-                    break;
-                case XmlPullParser.END_TAG:
-                    name = parser.getName();
-                    if (name.equalsIgnoreCase("product") && currentProduct != null) {
-                        products.add(currentProduct);
-                    }
-            }
-            eventType = parser.next();
-            //Log.i("while loop", "inside while loop");
-        }
-
-        Log.i("end", "ending of parseXML");
-        printProducts(products);
-    }
-
-    private void printProducts(ArrayList<Product> products) {
-        Log.i("start printProducts", "in printProducts");
-        String content = "";
-        Iterator<Product> it = products.iterator();
-        while (it.hasNext()) {
-            Product currProduct = it.next();
-            content = content + "nnnProduct: " + currProduct.name + "\n";
-            content = content + "Quantity: " + currProduct.quantity + "\n";
-            content = content + "Color: " + currProduct.color + "\n";
-
-        }
-
-
-        Log.i("content", content);
-
-        Log.i("end", "end of printProducts");
-        display.setText(content);
-    }*/
 }
