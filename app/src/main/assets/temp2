@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+    <product>
+        <productname color="red" quantity="5">Jeans</productname>
+    </product>
+    <product>
+        <productname color="blue" quantity="3">Tshirt</productname>
+    </product>
+    <product>
+        <productname color="green" quantity="4">shorts</productname>
+    </product>
+</products>
