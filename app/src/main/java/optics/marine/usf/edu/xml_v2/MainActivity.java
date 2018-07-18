@@ -10,13 +10,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.content.res.Resources;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,15 +39,54 @@ public class MainActivity extends AppCompatActivity {
     private String output;
     ProgressBar mProgressBar;
     TextView response;
+    public static final String TAG = "MyTag";
+    TextView mTextView;
+    String server_url = "http://optics.marine.usf.edu/cgi-bin/md_0.05?&menu=1";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         display = (TextView) findViewById(R.id.info);
+        mTextView = (TextView) findViewById(R.id.text);
 
 
-        XmlPullParserFactory pullParserFactory;
+
+        final RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, server_url,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            XmlPullParserFactory xmlParser = XmlPullParserFactory.newInstance();
+                            XmlPullParser parser = xmlParser.newPullParser();
+                            InputStream inputStream = new
+                                    ByteArrayInputStream(response.getBytes("UTF-8"));
+                            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                            parser.setInput(inputStream, null);
+
+                            parseXML(parser);
+                        } catch (IOException | XmlPullParserException e){
+                            e.printStackTrace();
+                            requestQueue.stop();
+                        }
+
+                        //requestQueue.stop();
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mTextView.setText("Something went wrong");
+                error.printStackTrace();
+                requestQueue.stop();
+            }
+        });
+        requestQueue.add(stringRequest);
+
+
+
+        /*XmlPullParserFactory pullParserFactory;
 
         try {
             pullParserFactory = XmlPullParserFactory.newInstance();
@@ -56,8 +100,9 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
+
 
     private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException {
         Log.i("inMethod", "in parseXML");
@@ -84,14 +129,14 @@ public class MainActivity extends AppCompatActivity {
                             response.myMenu = new Response.MyMenu();
                             Log.i("menu", name);
                         } else if (response.myMenu != null) {
-                            if (name.equals("top")) {
+                            if (name.equals("top_menu")) {
                                 response.myMenu.topMenu = new ArrayList<>();
                                 Response.MyMenu.TopMenu top = new Response.MyMenu.TopMenu();
                                 top.topTitle = parser.getAttributeValue(null, "title");
                                 response.myMenu.topMenu.add(top);
                                 Log.i("top", top.topTitle);
                             } else if (response.myMenu.topMenu.get(iTop) != null) {
-                                if (name.equals("mid")) {
+                                if (name.equals("mid_menu")) {
                                     if (response.myMenu.topMenu.get(iTop).midMenu == null) {
                                         response.myMenu.topMenu.get(iTop).midMenu = new ArrayList<>();
                                     }
@@ -103,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.i("iMid", iMid.toString());
                                     iMid++;
                                 } else if (response.myMenu.topMenu.get(iTop).midMenu.get(iMid) != null) {
-                                    if (name.equals("roi")) {
+                                    if (name.equals("roi_menu")) {
                                         response.myMenu.topMenu.get(iTop).midMenu.get(iMid).roi = new ArrayList<>();
                                         Response.MyMenu.TopMenu.MidMenu.ROI roi = new Response.MyMenu.TopMenu.MidMenu.ROI();
                                         roi.ROIname = parser.getAttributeValue(null, "name");
