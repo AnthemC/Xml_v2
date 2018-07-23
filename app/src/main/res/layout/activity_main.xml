@@ -9,6 +9,8 @@
 
     <TextView
         android:id="@+id/info"
+        android:maxLines="200"
+        android:scrollbars="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Xml_v2"/>

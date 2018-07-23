@@ -49,6 +49,9 @@ public class Response {
         public ArrayList<Pass> pass;
         public static class Pass{
             public ArrayList<MyImage> myImage;
+            public String sensor;
+            public String hour;
+            public String min;
             public static class MyImage{
                 public String picType;
                 public String s200;
