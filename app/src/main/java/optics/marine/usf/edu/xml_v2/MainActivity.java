@@ -178,7 +178,9 @@ public class MainActivity extends AppCompatActivity {
                                     iMid++;
                                 } else if (response.myMenu.topMenu.get(iTop).midMenu.get(iMid) != null) {
                                     if (name.equals("roi_menu")) {
-                                        response.myMenu.topMenu.get(iTop).midMenu.get(iMid).roi = new ArrayList<>();
+                                        if (response.myMenu.topMenu.get(iTop).midMenu.get(iMid).roi == null){
+                                            response.myMenu.topMenu.get(iTop).midMenu.get(iMid).roi = new ArrayList<>();
+                                        }
                                         Response.MyMenu.TopMenu.MidMenu.ROI roi = new Response.MyMenu.TopMenu.MidMenu.ROI();
                                         roi.ROIname = parser.getAttributeValue(null, "name");
                                         roi.ROIlink = parser.getAttributeValue(null, "link");
@@ -232,7 +234,9 @@ public class MainActivity extends AppCompatActivity {
                             }else if(response.tabs.pass.get(iPass) != null){
                                 if (name.equals("image")){
                                     //Log.i("images", "in name = image");
-                                    response.tabs.pass.get(iPass).myImage = new ArrayList<>();
+                                    if (response.tabs.pass.get(iPass).myImage == null){
+                                        response.tabs.pass.get(iPass).myImage = new ArrayList<>();
+                                    }
                                     Response.Tabs.Pass.MyImage image = new Response.Tabs.Pass.MyImage();
                                     image.picType = parser.getAttributeValue(null, "type");
                                     image.s200 = parser.getAttributeValue(null, "image_200_link");
